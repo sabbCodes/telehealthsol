@@ -2,10 +2,15 @@
 
 Med Rec is a simple Dapp for the [Agoric smart contract platform](https://docs.agoric.com/) that permits users to add medical records, in particular patient data, to Agoric blockchain. Users are given a simple in which to enter patients personal and medical information, and upon successful completion, this data is added to the Agoric VStorage. Currently, users can arbitrary number of patient's records.
 Note that this is an example dapp with no consideration made for privacy of sensitive information. All entered data maybe publicly visible depending on the host network of this dapp.
+This is the user interface of dapp:
+<p align="center">
+    <img src="./ui/public/ui-dapp.png" alt="Med Rec Dapp" width="500">
+</p>
 
-<div style="display: flex; align-items: center; justify-content: center; height: 300;">
-    <img src="./ui/public/ui.png" alt="Med Rec Dapp" style="display: block; margin: auto;">
-</div>
+This is how the data looks like in VStorage:
+<p align="center">
+    <img src="./ui/public/ui-vstorage.png" alt="Med Rec Dapp" width="500">
+</p>
 
 ## Getting started
 
