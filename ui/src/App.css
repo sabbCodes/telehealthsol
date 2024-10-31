@@ -26,6 +26,11 @@
   align-items: center;
 }
 
+.highlighted {
+  background-color: #f0f8ff;
+  font-weight: bold;
+}
+
 .title-section {
   display: flex;
   align-items: center;

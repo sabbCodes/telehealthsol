@@ -8,7 +8,8 @@ import {
   makeAgoricWalletConnection,
   suggestChain,
 } from '@agoric/web-components';
-import { UserCircle, Wallet, Activity, Heart } from 'lucide-react';
+import { Activity, Heart, UserCircle, Wallet, ClipboardList, User } from 'lucide-react';
+
 
 const ENDPOINTS = {
   RPC: 'http://localhost:26657',
@@ -311,4 +312,99 @@ const PatientDataForm = () => {
   );
 };
 
-export default PatientDataForm;
+const PatientTab = () => {
+  const [patients, setPatients] = useState<string[]>([]);
+  const [selectedPatientData, setSelectedPatientData] = useState<any | null>(null);
+  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+
+
+  // Fetch patient list
+  useEffect(() => {
+    const fetchPatientList = async () => {
+      const response = await fetch(`${ENDPOINTS.API}/agoric/vstorage/children/published.patientData.patients`);
+      const data = await response.json();
+      setPatients(data.children);
+      console.log(data.children);
+    };
+    fetchPatientList();
+  }, []);
+
+  // Fetch individual patient data
+  const fetchPatientData = async (patientId: string) => {
+    setSelectedPatientId(patientId); // Set the selected patient ID
+    const response = await fetch(`${ENDPOINTS.API}/agoric/vstorage/data/published.patientData.patients.${patientId}`);
+    let data = await response.json();
+    const parsedData = JSON.parse(data.value);
+    const datastring = JSON.stringify(parsedData.values[0]).replace('#{', '{').replace('}#', '}');
+    const parsedBody = JSON.parse(JSON.parse(datastring));
+
+    setSelectedPatientData(parsedBody);
+    
+  };
+
+  return (
+    <div className="view-container">
+      <div className="patient-list-container">
+        <h2 className="section-title">
+          <ClipboardList className="icon" /> Patients List
+        </h2>
+        <ul className="patient-list">
+          {patients.map((patientId) => (
+            <li
+              key={patientId}
+              onClick={() => fetchPatientData(patientId)}
+              className={`patient-item ${patientId === selectedPatientId ? 'highlighted' : ''}`}
+            >
+              <User className="patient-icon" />
+              {patientId}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {selectedPatientData && (
+        <div className="patient-details">
+          <h3 className="details-title">
+            Patient Details
+          </h3>
+          <div className="details-card">
+            <pre>{JSON.stringify(JSON.parse(selectedPatientData.body), null, 2)}</pre>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('form');
+
+  return (
+    <div className="app-container">
+      <div className="tabs">
+        <button 
+          className={`tab ${activeTab === 'form' ? 'active' : ''}`}
+          onClick={() => setActiveTab('form')}
+        >
+          Submit Patient Data
+        </button>
+        <button
+          className={`tab ${activeTab === 'view' ? 'active' : ''}`} 
+          onClick={() => setActiveTab('view')}
+        >
+          View Patients
+        </button>
+      </div>
+
+      <div className="tab-content">
+        {activeTab === 'form' ? (
+          <PatientDataForm />
+        ) : (
+          <PatientTab />
+        )}
+      </div>
+    </div>
+  );
+}
+// export default PatientDataForm;

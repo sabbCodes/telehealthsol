@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 .env
+.yarnrc.yml
+install-state.gz
+,tx.json
 
 # Editor directories and files
 .vscode/*

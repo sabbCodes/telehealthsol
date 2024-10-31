@@ -69,3 +69,277 @@ button:focus-visible {
     background: #039962;
   }
 }
+
+.highlighted {
+  background-color: #f0f8ff;
+  font-weight: bold;
+}
+
+/* General Styles */
+.app-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 2rem 1rem;
+}
+
+.form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Header Styles */
+.header {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  padding: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.highlighted {
+  background-color: #f0f8ff;
+  font-weight: bold;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-left: 0.75rem;
+}
+
+.icon {
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+}
+
+.wallet-button {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  color: #4e54c8;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.wallet-button:hover {
+  background-color: #f0f2f5;
+}
+
+.wallet-button .icon {
+  margin-right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  color: #4e54c8;
+}
+
+/* Form Styles */
+.form {
+  padding: 2rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333333;
+  margin-left: 0.5rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .field-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555555;
+  margin-bottom: 0.5rem;
+}
+
+.input,
+.textarea,
+select {
+  padding: 0.75rem;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333333;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus,
+.textarea:focus,
+select:focus {
+  border-color: #4e54c8;
+  outline: none;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  background-color: #4e54c8;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background-color: #4348a2;
+}
+
+.submit-button .icon {
+  margin-right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.submit-button.disabled,
+.submit-button.disabled:hover {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wallet-button {
+    margin-top: 1rem;
+  }
+}
+
+.view-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.patient-list-container {
+  width: 40%;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.section-title .icon {
+  margin-right: 0.5rem;
+}
+
+.patient-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.patient-item {
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.patient-item:hover {
+  background-color: #e6f7ff;
+}
+
+.patient-item.highlighted {
+  background-color: #bae7ff;
+  font-weight: bold;
+}
+
+.patient-icon {
+  margin-right: 0.75rem;
+  color: #1890ff;
+}
+
+.patient-details {
+  width: 55%;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.details-card {
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+

@@ -4,7 +4,7 @@ Med Rec is a simple Dapp for the [Agoric smart contract platform](https://docs.a
 Note that this is an example dapp with no consideration made for privacy of sensitive information. All entered data maybe publicly visible depending on the host network of this dapp.
 This is the user interface of dapp:
 <p align="center">
-    <img src="./ui/public/ui-dapp.png" alt="Med Rec Dapp" width="500">
+    <img src="./ui/public/ui-dapp.png" alt="Med Rec Dapp" width="400">
 </p>
 
 This is how the data looks like in VStorage:
