@@ -23,39 +23,32 @@ export const start = async (zcf, privateArgs) => {
   const { maxPatients } = zcf.getTerms();
 
   // Create storage node for patient data
-  const patientDataRoot = await E(privateArgs.storageNode).makeChildNode('patients');
-  
-  // Get marshaller for data serialization
-  const marshaller = await E(privateArgs.board).getPublishingMarshaller();
+  const patientDataRoot = await E(privateArgs.storageNode).makeChildNode(
+    'patients',
+  );
 
   /**
    * Store patient data in VStorage
-   * @param {string} patientId 
-   * @param {object} data 
+   * @param {string} patientId
+   * @param {object} data
    */
   const storePatientData = async (patientId, data) => {
     const patientNode = await E(patientDataRoot).makeChildNode(patientId);
-    const marshalledData = JSON.stringify(await E(marshaller).toCapData(data));
-    await E(patientNode).setValue(marshalledData);
+    await E(patientNode).setValue(JSON.stringify(data));
   };
 
   /**
    * Validate patient data structure
-   * @param {object} data 
+   * @param {object} data
    */
-  const validatePatientData = (data) => {
-    const requiredFields = [
-      'patientId',
-      'name',
-      'age',
-      'gender',
-      'bloodType',
-    ];
+  const validatePatientData = data => {
+    const requiredFields = ['patientId', 'name', 'age', 'gender', 'bloodType'];
 
-    return requiredFields.every(field => 
-      Object.prototype.hasOwnProperty.call(data, field) && 
-      data[field] !== null && 
-      data[field] !== undefined
+    return requiredFields.every(
+      field =>
+        Object.prototype.hasOwnProperty.call(data, field) &&
+        data[field] !== null &&
+        data[field] !== undefined,
     );
   };
 
@@ -67,8 +60,8 @@ export const start = async (zcf, privateArgs) => {
 
   /**
    * Handle publishing of patient data
-   * @param {ZCFSeat} seat 
-   * @param {object} offerArgs 
+   * @param {ZCFSeat} seat
+   * @param {object} offerArgs
    */
   const publishHandler = async (seat, offerArgs) => {
     const { patientData } = offerArgs;
@@ -82,7 +75,7 @@ export const start = async (zcf, privateArgs) => {
     try {
       // Store the patient data
       await storePatientData(patientData.patientId, patientData);
-      
+
       seat.exit();
       return 'Patient data published successfully';
     } catch (error) {

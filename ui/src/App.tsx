@@ -301,10 +301,8 @@ const PatientTab = () => {
     const response = await fetch(`${ENDPOINTS.API}/agoric/vstorage/data/published.patientData.patients.${patientId}`);
     let data = await response.json();
     const parsedData = JSON.parse(data.value);
-    const datastring = JSON.stringify(parsedData.values[0]).replace('#{', '{').replace('}#', '}');
-    const parsedBody = JSON.parse(JSON.parse(datastring));
+    setSelectedPatientData(parsedData.values[0]);
 
-    setSelectedPatientData(parsedBody);
   };
 
   return (
@@ -333,7 +331,7 @@ const PatientTab = () => {
             Patient Details
           </h3>
           <div className="details-card">
-            <pre>{JSON.stringify(JSON.parse(selectedPatientData.body), null, 2)}</pre>
+            <pre>{JSON.stringify(JSON.parse(selectedPatientData), null, 2)}</pre>
           </div>
         </div>
       )}

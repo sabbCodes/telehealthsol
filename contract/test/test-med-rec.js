@@ -1,139 +1,208 @@
-/* eslint-disable import/order -- https://github.com/endojs/endo/issues/1235 */
+/* eslint-disable import/order */
 import { test as anyTest } from './prepare-test-env-ava.js';
 import { createRequire } from 'module';
 import { E } from '@endo/far';
 import { makeNodeBundleCache } from '@endo/bundle-source/cache.js';
 import { makeZoeKitForTest } from '@agoric/zoe/tools/setup-zoe.js';
 import { AmountMath, makeIssuerKit } from '@agoric/ertp';
+import { makeMockChainStorageRoot } from '@agoric/internal/src/storage-test-utils.js';
+
 
 const myRequire = createRequire(import.meta.url);
 const contractPath = myRequire.resolve(`../src/med-rec-contract.js`);
 
 const test = anyTest;
 
-const PROPERTIES_TO_CREATE = 4;
-
-const makeTestContext = async _t => {
-  const { zoeService: zoe, feeMintAccess } = makeZoeKitForTest();
-
+const makeTestContext = async (_t) => {
+  const { zoeService: zoe } = makeZoeKitForTest();
   const bundleCache = await makeNodeBundleCache('bundles/', {}, s => import(s));
-  const bundle = await bundleCache.load(contractPath, 'assetContract');
-
-  const issuers = [...Array(PROPERTIES_TO_CREATE)].map((_, index) =>
-    makeIssuerKit(`PlayProperty_${index}`),
-  );
-
-  return { zoe, bundle, bundleCache, feeMintAccess, issuers };
+  const bundle = await bundleCache.load(contractPath, 'medRecContract');
+  
+  return { 
+    zoe,
+    bundle,
+    bundleCache,
+    storageNode: makeMockChainStorageRoot().makeChildNode('patientData'),
+    board: makeMockChainStorageRoot().makeChildNode('boardAux'),
+  };
 };
 
 test.before(async t => (t.context = await makeTestContext(t)));
 
-test('Test real estate sell and buy', async t => {
-  const moneyBrandKeyword = 'Money';
-  const propertyUnitsToBuy = 4n;
-  const sellerPerUnitPrice = 5n;
-
-  const { bundle, zoe } = t.context;
-  const moneyIssuerKit = makeIssuerKit(moneyBrandKeyword);
-
-  const moneyAmountToOffer = AmountMath.make(
-    moneyIssuerKit.brand,
-    sellerPerUnitPrice,
-  );
+// Test successful patient data publishing
+test('Successfully publish valid patient data', async t => {
+  const { bundle, zoe, storageNode, board } = t.context;
 
   const terms = {
-    propertiesCount: BigInt(PROPERTIES_TO_CREATE),
-    tokensPerProperty: 100n,
+    maxPatients: 1000n,
   };
 
   const installation = await E(zoe).install(bundle);
-  const { instance, creatorFacet } = await E(zoe).startInstance(
+  const { instance, publicFacet } = await E(zoe).startInstance(
     installation,
-    { [moneyBrandKeyword]: moneyIssuerKit.issuer },
+    undefined,
     terms,
-  );
-  const { issuers, brands } = await E(zoe).getTerms(instance);
-
-  const creatorPayments = creatorFacet.getInitialPayments();
-  const propertyIssuers = Object.entries(issuers)
-    .filter(([brandKeyword]) => brandKeyword !== moneyBrandKeyword)
-    .reduce(
-      (acc, [brandKeyword, issuer]) => ({ ...acc, [brandKeyword]: issuer }),
-      {},
-    );
-
-  const creatorPurses = Object.entries(propertyIssuers).reduce(
-    (acc, [brandKeyword, issuer]) => {
-      const purse = issuer.makeEmptyPurse();
-      purse.deposit(creatorPayments[brandKeyword]);
-      return { ...acc, [brandKeyword]: purse };
-    },
-    {},
+    { storageNode, board }
   );
 
-  const randomBrandIndex = Math.floor(
-    Math.random() * Object.keys(propertyIssuers).length,
-  );
-  const brandToSell = Object.keys(propertyIssuers).find(
-    (_, index) => randomBrandIndex === index,
-  );
-
-  const publicFacet = await E(zoe).getPublicFacet(instance);
-
-  const property = issuers[brandToSell];
-  const propertyAmountToOffer = AmountMath.make(brands[brandToSell], 50n);
-
-  const propertyPayment = creatorPurses[brandToSell].withdraw(
-    propertyAmountToOffer,
-  );
-
-  // Proposal to sell a property
-  const sellProposal = {
-    give: { GiveAsset: propertyAmountToOffer },
-    want: {
-      WantAsset: moneyAmountToOffer,
-    },
+  const validPatientData = {
+    patientId: 'P12345',
+    name: 'John Doe',
+    age: 30,
+    gender: 'M',
+    bloodType: 'O+',
   };
 
-  const sellerSeat = await E(zoe).offer(
-    E(publicFacet).makeTradeInvitation(),
-    sellProposal,
-    {
-      GiveAsset: propertyPayment,
-    },
+  const invitation = E(publicFacet).makePublishInvitation();
+  
+  const userSeat = await E(zoe).offer(
+    invitation,
+    undefined,
+    undefined,
+    { patientData: validPatientData }
   );
 
-  // Proposal to buy a property
-  const buyProposal = {
-    give: { GiveAsset: AmountMath.make(moneyIssuerKit.brand, 20n) },
-    want: {
-      WantAsset: AmountMath.make(brands[brandToSell], propertyUnitsToBuy),
-    },
+  const result = await E(userSeat).getOfferResult();
+  t.is(result, 'Patient data published successfully');
+});
+
+// Test invalid patient data rejection
+test('Reject invalid patient data', async t => {
+  const { bundle, zoe, storageNode, board } = t.context;
+
+  const terms = {
+    maxPatients: 1000n,
   };
-  const moneyPayment = moneyIssuerKit.mint.mintPayment(
-    AmountMath.make(moneyIssuerKit.brand, 20n),
+
+  const installation = await E(zoe).install(bundle);
+  const { instance, publicFacet } = await E(zoe).startInstance(
+    installation,
+    undefined,
+    terms,
+    { storageNode, board }
   );
 
-  const buyerSeat = await E(zoe).offer(
-    E(publicFacet).makeTradeInvitation(),
-    buyProposal,
-    {
-      GiveAsset: moneyPayment,
+  const invalidPatientData = {
+    patientId: 'P12345',
+    name: 'John Doe',
+    // Missing required fields: age, gender, bloodType
+  };
+
+  const invitation = E(publicFacet).makePublishInvitation();
+  
+  await t.throwsAsync(
+    async () => {
+      await E(zoe).offer(
+        invitation,
+        undefined,
+        undefined,
+        { patientData: invalidPatientData }
+      );
     },
+    { message: /Invalid patient data structure/ }
+  );
+});
+
+// Test duplicate patient ID handling
+test('Handle duplicate patient ID', async t => {
+  const { bundle, zoe, storageNode, board } = t.context;
+
+  const terms = {
+    maxPatients: 1000n,
+  };
+
+  const installation = await E(zoe).install(bundle);
+  const { instance, publicFacet } = await E(zoe).startInstance(
+    installation,
+    undefined,
+    terms,
+    { storageNode, board }
   );
 
-  const propertiesBought = await E(buyerSeat).getPayout('WantAsset');
-  t.deepEqual(
-    await E(property).getAmountOf(propertiesBought),
-    buyProposal.want.WantAsset,
+  const patientData = {
+    patientId: 'P12345',
+    name: 'John Doe',
+    age: 30,
+    gender: 'M',
+    bloodType: 'O+',
+  };
+
+  // First submission
+  const invitation1 = E(publicFacet).makePublishInvitation();
+  await E(zoe).offer(
+    invitation1,
+    undefined,
+    undefined,
+    { patientData }
   );
 
-  const moneyReceived = await E(sellerSeat).getPayout('WantAsset');
-  t.deepEqual(
-    await E(moneyIssuerKit.issuer).getAmountOf(moneyReceived),
-    AmountMath.make(
-      moneyIssuerKit.brand,
-      sellerPerUnitPrice * propertyUnitsToBuy,
-    ),
+  // Second submission with same ID
+  const invitation2 = E(publicFacet).makePublishInvitation();
+  const duplicateData = { ...patientData, name: 'Jane Doe' };
+  
+  const userSeat = await E(zoe).offer(
+    invitation2,
+    undefined,
+    undefined,
+    { patientData: duplicateData }
+  );
+
+  const result = await E(userSeat).getOfferResult();
+  t.is(result, 'Patient data published successfully');
+});
+
+// Test maxPatients limit
+test('Enforce maxPatients limit', async t => {
+  const { bundle, zoe, storageNode, board } = t.context;
+
+  const terms = {
+    maxPatients: 1n, // Set limit to 1 patient
+  };
+
+  const installation = await E(zoe).install(bundle);
+  const { instance, publicFacet } = await E(zoe).startInstance(
+    installation,
+    undefined,
+    terms,
+    { storageNode, board }
+  );
+
+  const patient1Data = {
+    patientId: 'P12345',
+    name: 'John Doe',
+    age: 30,
+    gender: 'M',
+    bloodType: 'O+',
+  };
+
+  const patient2Data = {
+    patientId: 'P67890',
+    name: 'Jane Doe',
+    age: 25,
+    gender: 'F',
+    bloodType: 'A+',
+  };
+
+  // First patient should succeed
+  const invitation1 = E(publicFacet).makePublishInvitation();
+  await E(zoe).offer(
+    invitation1,
+    undefined,
+    undefined,
+    { patientData: patient1Data }
+  );
+
+  // Second patient should fail due to maxPatients limit
+  const invitation2 = E(publicFacet).makePublishInvitation();
+  await t.throwsAsync(
+    async () => {
+      await E(zoe).offer(
+        invitation2,
+        undefined,
+        undefined,
+        { patientData: patient2Data }
+      );
+    },
+    { message: /Maximum number of patients reached/ }
   );
 });
