@@ -197,6 +197,18 @@ const PatientDataForm = () => {
                   required
                 />
               </div>
+              {/* Emergency Contact */}
+              <div className="field">
+                <label className="label">Emergency Contact </label>
+                <input
+                  type="text"
+                  name="emergencyContact"
+                  value={formData.emergencyContact}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
             </div>
           </div>
 
@@ -224,14 +236,23 @@ const PatientDataForm = () => {
               {/* Blood Type */}
               <div className="field">
                 <label className="label">Blood Type </label>
-                <input
-                  type="text"
+                <select
                   name="bloodType"
                   value={formData.bloodType}
                   onChange={handleInputChange}
                   className="input"
                   required
-                />
+                >
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
               </div>
               {/* Gender */}
               <div className="field">
@@ -284,19 +305,6 @@ const PatientDataForm = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Emergency Contact */}
-        <div className="field">
-          <label className="label">Emergency Contact </label>
-          <input
-            type="text"
-            name="emergencyContact"
-            value={formData.emergencyContact}
-            onChange={handleInputChange}
-            className="input"
-            required
-          />
         </div>
 
         {/* Submit Button */}
@@ -465,7 +473,7 @@ export default function App() {
             onClick={() => setActiveTab('form')}
           >
             <ClipboardList className="icon" />
-            Submit Patient Data
+            Register a New Patient
           </div>
           <div
             role="tab"
@@ -473,7 +481,7 @@ export default function App() {
             onClick={() => setActiveTab('view')}
           >
             <User className="icon" />
-            View Patients
+            View Current Patients
           </div>
         </div>
 
