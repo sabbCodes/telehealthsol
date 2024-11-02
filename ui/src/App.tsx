@@ -109,6 +109,50 @@ const publishPatientData = (patientData: any) => {
   );
 };
 
+const updatePatientData = (patientId: string, patientData: any) => {
+  const { wallet, patientContractInstance } = useAppStore.getState();
+  if (!patientContractInstance) {
+    toast.error('No instance of Smart Contract found on chain!', {
+      duration: 10000,
+      position: 'bottom-right',
+    });
+    return;
+  }
+
+  wallet?.makeOffer(
+    {
+      source: 'contract',
+      instance: patientContractInstance,
+      publicInvitationMaker: 'makePublishInvitation',
+    },
+    {}, // No assets being exchanged
+    {
+      patientId,
+      patientData,
+    },
+    (update: { status: string; data?: unknown }) => {
+      if (update.status === 'error') {
+        toast.error(`Update error: ${update.data}`, {
+          duration: 10000,
+          position: 'bottom-right',
+        });
+      }
+      if (update.status === 'accepted') {
+        toast.success('Data updated successfully', {
+          duration: 10000,
+          position: 'bottom-right',
+        });
+      }
+      if (update.status === 'refunded') {
+        toast.error('Update rejected', {
+          duration: 10000,
+          position: 'bottom-right',
+        });
+      }
+    },
+  );
+};
+
 const PatientDataForm = () => {
   const [formData, setFormData] = useState({
     patientId: 'PAT-2024-001',
@@ -321,6 +365,252 @@ const PatientDataForm = () => {
   );
 };
 
+const UpdatePatientForm = () => {
+  const [patients, setPatients] = useState<string[]>([]);
+  const [formData, setFormData] = useState({
+    patientId: '',
+    name: '',
+    age: '',
+    gender: '',
+    bloodType: '',
+    allergies: '',
+    medications: '',
+    lastVisit: '',
+    primaryDoctor: '',
+    emergencyContact: '',
+  });
+
+  const { wallet } = useAppStore(({ wallet }) => ({
+    wallet,
+  }));
+
+  // Fetch patient list
+  useEffect(() => {
+    const fetchPatientList = async () => {
+      const response = await fetch(
+        `${ENDPOINTS.API}/agoric/vstorage/children/published.patientData.patients`,
+      );
+      const data = await response.json();
+      setPatients(data.children);
+    };
+    fetchPatientList();
+  }, []);
+
+  // Fetch patient data when selected
+  const handlePatientSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const patientId = e.target.value;
+    if (!patientId) return;
+
+    const response = await fetch(
+      `${ENDPOINTS.API}/agoric/vstorage/data/published.patientData.patients.${patientId}`,
+    );
+    const data = await response.json();
+    const parsedData = JSON.parse(data.value).values[0];
+    const patientData = JSON.parse(parsedData);
+    setFormData(patientData);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updatePatientData(formData.patientId, formData);
+  };
+
+  return (
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form">
+        <div className="patient-selector">
+          <label className="label">Select Patient to Update</label>
+          <select
+            className="input"
+            value={formData.patientId}
+            onChange={handlePatientSelect}
+            required
+          >
+            <option value="">Select a patient</option>
+            {patients.map(patientId => (
+              <option key={patientId} value={patientId}>
+                {patientId}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="sections-container">
+          {/* Personal Information */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">
+                Personal Information <UserCircle className="icon" />
+              </h2>
+            </div>
+            <div className="field-grid">
+              {/* Patient ID - readonly since it's selected above */}
+              <div className="field">
+                <label className="label">Patient ID</label>
+                <input
+                  type="text"
+                  name="patientId"
+                  value={formData.patientId}
+                  className="input"
+                  disabled
+                />
+              </div>
+              {/* Full Name */}
+              <div className="field">
+                <label className="label">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Primary Doctor */}
+              <div className="field">
+                <label className="label">Primary Doctor</label>
+                <input
+                  type="text"
+                  name="primaryDoctor"
+                  value={formData.primaryDoctor}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Emergency Contact */}
+              <div className="field">
+                <label className="label">Emergency Contact</label>
+                <input
+                  type="text"
+                  name="emergencyContact"
+                  value={formData.emergencyContact}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Medical Information */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">
+                Medical Information <Heart className="icon" />
+              </h2>
+            </div>
+            <div className="field-grid">
+              {/* Age */}
+              <div className="field">
+                <label className="label">Age</label>
+                <input
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Blood Type */}
+              <div className="field">
+                <label className="label">Blood Type</label>
+                <select
+                  name="bloodType"
+                  value={formData.bloodType}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                >
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+              {/* Gender */}
+              <div className="field">
+                <label className="label">Gender</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              {/* Last Visit Date */}
+              <div className="field">
+                <label className="label">Last Visit Date</label>
+                <input
+                  type="date"
+                  name="lastVisit"
+                  value={formData.lastVisit}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Allergies */}
+              <div className="field">
+                <label className="label">Allergies</label>
+                <textarea
+                  name="allergies"
+                  value={formData.allergies}
+                  onChange={handleInputChange}
+                  className="textarea"
+                  rows={4}
+                />
+              </div>
+              {/* Current Medications */}
+              <div className="field">
+                <label className="label">Current Medications</label>
+                <textarea
+                  name="medications"
+                  value={formData.medications}
+                  onChange={handleInputChange}
+                  className="textarea"
+                  rows={4}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`submit-button ${!wallet || !formData.patientId ? 'disabled' : ''}`}
+          disabled={!wallet || !formData.patientId}
+        >
+          <Activity className="icon" />
+          <span>Update Patient Data</span>
+        </button>
+      </form>
+    </div>
+  );
+};
+
 const PatientTab = () => {
   const [patients, setPatients] = useState<string[]>([]);
   const [selectedPatientData, setSelectedPatientData] = useState<any | null>(
@@ -432,7 +722,7 @@ export default function App() {
         <div className="header-content">
           <div className="title-section">
             <Activity className="icon" />
-            <h1 className="title">Patient Data Management</h1>
+            <h1 className="title">Agoric Patient Data Management</h1>
           </div>
           <div className="wallet-section">
             <div className="wallet-info">
@@ -473,7 +763,15 @@ export default function App() {
             onClick={() => setActiveTab('form')}
           >
             <ClipboardList className="icon" />
-            Register a New Patient
+            Register New Patient
+          </div>
+          <div
+            role="tab"
+            className={`nav-tab ${activeTab === 'update' ? 'active' : ''}`}
+            onClick={() => setActiveTab('update')}
+          >
+            <Activity className="icon" />
+            Update Patient Record
           </div>
           <div
             role="tab"
@@ -486,7 +784,9 @@ export default function App() {
         </div>
 
         <div className="tab-content">
-          {activeTab === 'form' ? <PatientDataForm /> : <PatientTab />}
+          {activeTab === 'form' ? <PatientDataForm /> : 
+           activeTab === 'update' ? <UpdatePatientForm /> : 
+           <PatientTab />}
         </div>
       </div>
     </div>

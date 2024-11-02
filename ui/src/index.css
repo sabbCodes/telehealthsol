@@ -298,6 +298,8 @@ select:focus {
   padding: 1rem;
   background-color: #f9f9f9;
   border-radius: 8px;
+  height: calc(100vh - 300px);
+  overflow: hidden;
 }
 
 .patient-list-container {
@@ -306,6 +308,10 @@ select:focus {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .section-title {
@@ -324,6 +330,9 @@ select:focus {
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: 0;
 }
 
 .patient-item {
@@ -355,6 +364,7 @@ select:focus {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .details-title {
@@ -373,13 +383,13 @@ select:focus {
 .nav-buttons {
   display: flex;
   justify-content: center;
-  gap: 3rem;
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
+  gap: 1rem;
+  background-color: #f8f8f8;
+  padding: 1.5rem 1.5rem 0;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   position: relative;
+  border-bottom: 1px solid #eaeaea;
 }
 
 .nav-tab {
@@ -389,63 +399,59 @@ select:focus {
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  color: #333;
-  border-radius: 10px;
+  color: #666;
+  border-radius: 10px 10px 0 0;
   transition: all 0.3s ease;
   position: relative;
-  transform-origin: center;
+  margin-bottom: -1px; /* Overlap the border bottom when active */
+  border: 1px solid transparent;
 }
 
 .nav-tab:hover {
   background-color: #fff0f0;
   color: #c84e4e;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(200, 78, 78, 0.2);
-}
-
-.nav-tab::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 4px 8px;
-  background-color: #333;
-  color: white;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.nav-tab:hover::after {
-  opacity: 1;
-  visibility: visible;
-  bottom: -25px;
 }
 
 .nav-tab.active {
-  background-color: #c84e4e;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #c84e4e;
   font-weight: bold;
-  transform: scale(1.05);
+  border: 1px solid #eaeaea;
+  border-bottom: 1px solid #ffffff;
 }
 
 .nav-tab .icon {
   margin-right: 0.5rem;
-  color: #c84e4e;
+  color: inherit;
   transition: transform 0.3s ease;
 }
 
-.nav-tab:hover .icon {
-  transform: rotate(10deg);
+.tab-content {
+  background-color: #ffffff;
+  padding: 1.5rem;
 }
 
-.nav-tab.active .icon {
-  color: #ffffff;
-  transform: scale(1.1);
+/* Remove or modify these conflicting styles */
+.nav-tab::after {
+  display: none; /* Remove the tooltip for cleaner tab appearance */
+}
+
+.nav-tab:hover {
+  transform: none; /* Remove the hover transform */
+  box-shadow: none;
+}
+
+.nav-tab.active {
+  transform: none; /* Remove the active transform */
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 /* Form section layout */
@@ -460,4 +466,38 @@ select:focus {
   .sections-container {
     grid-template-columns: 1fr;
   }
+}
+
+.patient-selector {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+}
+
+.patient-selector select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+}
+
+.patient-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.patient-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.patient-list::-webkit-scrollbar-thumb {
+  background: #c84e4e;
+  border-radius: 4px;
+}
+
+.patient-list::-webkit-scrollbar-thumb:hover {
+  background: #a24343;
 }
