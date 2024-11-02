@@ -1,52 +1,15 @@
 // @ts-check
 import { E } from '@endo/far';
-import { makeMarshal } from '@endo/marshal';
 
 console.warn('start proposal module evaluating');
-
-const { Fail } = assert;
-
-// vstorage paths under published.*
-const BOARD_AUX = 'boardAux';
-
-const marshalData = makeMarshal(_val => Fail`data only`);
-
-const IST_UNIT = 1_000_000n;
-const CENT = IST_UNIT / 100n;
-const propertiesCount = 1n;
-
-const tokenNames = [...Array(Number(propertiesCount))].map(
-  (_, index) => `PlayProperty_${index}`,
-);
-
-/**
- * Make a storage node for auxilliary data for a value on the board.
- *
- * @param {ERef<StorageNode>} chainStorage
- * @param {string} boardId
- */
-const makeBoardAuxNode = async (chainStorage, boardId) => {
-  const boardAux = E(chainStorage).makeChildNode(BOARD_AUX);
-  return E(boardAux).makeChildNode(boardId);
-};
-
-const publishBrandInfo = async (chainStorage, board, brand) => {
-  const [id, displayInfo] = await Promise.all([
-    E(board).getId(brand),
-    E(brand).getDisplayInfo(),
-  ]);
-  const node = makeBoardAuxNode(chainStorage, id);
-  const aux = marshalData.toCapData(harden({ displayInfo }));
-  await E(node).setValue(JSON.stringify(aux));
-};
 
 /**
  * Core eval script to start contract
  *
  * @param {BootstrapPowers} permittedPowers
  */
-export const startpatientDataContract = async permittedPowers => {
-  console.error('startpatientDataContract()...');
+export const startPatientDataContract = async permittedPowers => {
+  console.error('startPatientDataContract()...');
   const {
     consume: { board, chainStorage, startUpgradable, zoe },
     brand: {
@@ -75,9 +38,7 @@ export const startpatientDataContract = async permittedPowers => {
   );
 
   const storageNode = await E(chainStorage).makeChildNode('patientData');
-
   const istIssuer = await istIssuerP;
-  const istBrand = await istBrandP;
 
   const terms = { maxPatients: 100n };
 
@@ -104,23 +65,12 @@ export const startpatientDataContract = async permittedPowers => {
 
   produceInstance.reset();
   produceInstance.resolve(instance);
-
-  for (const token of tokenNames) {
-    const brand = brands[token];
-    const issuer = issuers[token];
-    brandProducers[token].reset();
-    brandProducers[token].resolve(brand);
-    issueProducers[token].reset();
-    issueProducers[token].resolve(issuer);
-  }
-
-  //   await publishBrandInfo(chainStorage, board, brand);
   console.log('patientData (re)started');
 };
 
 /** @type { import("@agoric/vats/src/core/lib-boot").BootstrapManifest } */
 const patientDataManifest = {
-  [startpatientDataContract.name]: {
+  [startPatientDataContract.name]: {
     consume: {
       agoricNames: true,
       board: true, // to publish boardAux info for NFT brand
@@ -131,18 +81,21 @@ const patientDataManifest = {
     installation: { consume: { patientData: true } },
     issuer: {
       consume: { IST: true },
-      produce: tokenNames.reduce((acc, name) => ({ ...acc, [name]: true }), {}),
+      produce: { IST: true },
     },
     brand: {
       consume: { IST: true },
-      produce: tokenNames.reduce((acc, name) => ({ ...acc, [name]: true }), {}),
+      produce: { IST: true },
     },
     instance: { produce: { patientData: true } },
   },
 };
 harden(patientDataManifest);
 
-export const getManifestForPatientData = ({ restoreRef }, { patientDataRef }) => {
+export const getManifestForPatientData = (
+  { restoreRef },
+  { patientDataRef },
+) => {
   return harden({
     manifest: patientDataManifest,
     installations: {
