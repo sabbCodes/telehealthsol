@@ -97,43 +97,6 @@ export const startpatientDataContract = async permittedPowers => {
   console.log('CoreEval script: started contract', instance);
   const { brands, issuers } = await E(zoe).getTerms(instance);
 
-  // const creatorPayments = creatorFacet.getInitialPayments();
-  // const creatorPurses = Object.entries(issuers).reduce(
-  //   (acc, [brandKeyword, issuer]) => {
-  //     const purse = issuer.makeEmptyPurse();
-  //     purse.deposit(creatorPayments[brandKeyword]);
-  //     return { ...acc, [brandKeyword]: purse };
-  //   },
-  //   {},
-  // );
-
-  // const brandToSell = 'PlayProperty_0';
-
-  // const publicFacet = await E(zoe).getPublicFacet(instance);
-
-  // const propertyAmountToOffer = AmountMath.make(brands[brandToSell], 100n);
-
-  // const propertyPayment = creatorPurses[brandToSell].withdraw(
-  //   propertyAmountToOffer,
-  // );
-
-  // const moneyAmountToOffer = AmountMath.make(istIssuer.brand, 100n);
-  // // Proposal to sell a property
-  // const sellProposal = {
-  //   give: { GiveAsset: propertyAmountToOffer },
-  //   want: {
-  //     WantAsset: moneyAmountToOffer,
-  //   },
-  // };
-
-  // const sellerSeat = await E(zoe).offer(
-  //   E(publicFacet).makeTradeInvitation(),
-  //   sellProposal,
-  //   {
-  //     GiveAsset: propertyPayment,
-  //   },
-  // );
-
   console.log('CoreEval script: share via agoricNames:', {
     brands,
     issuers,
@@ -179,10 +142,7 @@ const patientDataManifest = {
 };
 harden(patientDataManifest);
 
-export const getManifestForpatientData = (
-  { restoreRef },
-  { patientDataRef },
-) => {
+export const getManifestForPatientData = ({ restoreRef }, { patientDataRef }) => {
   return harden({
     manifest: patientDataManifest,
     installations: {

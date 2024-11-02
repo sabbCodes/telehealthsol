@@ -68,7 +68,13 @@ const disconnectWallet = () => {
 
 const publishPatientData = (patientData: any) => {
   const { wallet, patientContractInstance } = useAppStore.getState();
-  if (!patientContractInstance) throw Error('no contract instance');
+  if (!patientContractInstance) {
+    toast.error('No instance of Smart Contract found on chain!', {
+      duration: 10000,
+      position: 'bottom-right',
+    });
+    return;
+  }
 
   wallet?.makeOffer(
     {
@@ -425,7 +431,7 @@ export default function App() {
           <div className="wallet-section">
             <div className="wallet-info">
               {wallet?.address && (
-                <div 
+                <div
                   className="wallet-address"
                   onClick={copyAddressToClipboard}
                   style={{ cursor: 'pointer' }}
@@ -434,7 +440,9 @@ export default function App() {
                   {wallet.address.slice(0, 10)}...{wallet.address.slice(-4)}
                 </div>
               )}
-              {!wallet?.address && <div className="wallet-address-placeholder" />}
+              {!wallet?.address && (
+                <div className="wallet-address-placeholder" />
+              )}
             </div>
             {wallet ? (
               <button onClick={disconnectWallet} className="wallet-button">

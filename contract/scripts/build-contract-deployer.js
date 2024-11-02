@@ -12,14 +12,14 @@
  */
 
 import { makeHelpers } from '@agoric/deploy-script-support';
-import { getManifestForpatientData } from '../src/med-rec-proposal.js';
+import { getManifestForPatientData } from '../src/med-rec-proposal.js';
 
 /** @type {import('@agoric/deploy-script-support/src/externalTypes.js').ProposalBuilder} */
 export const patientDataProposalBuilder = async ({ publishRef, install }) => {
   return harden({
     sourceSpec: '../src/med-rec-proposal.js',
     getManifestCall: [
-      getManifestForpatientData.name,
+      getManifestForPatientData.name,
       {
         patientDataRef: publishRef(
           install(
