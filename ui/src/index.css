@@ -83,11 +83,12 @@ button:focus-visible {
 }
 
 .form-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
   overflow: hidden;
 }
 
@@ -294,23 +295,23 @@ select:focus {
 
 .view-container {
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 2rem;
+  padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 8px;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 350px);
   overflow: hidden;
 }
 
 .patient-list-container {
-  width: 40%;
-  padding: 1rem;
+  width: 30%;
+  padding: 1.5rem;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 94%;
   overflow: hidden;
 }
 
@@ -330,7 +331,7 @@ select:focus {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
   flex-grow: 1;
   height: 0;
 }
@@ -359,7 +360,7 @@ select:focus {
 }
 
 .patient-details {
-  width: 55%;
+  width: 90%;
   padding: 1.5rem;
   background-color: #ffffff;
   border-radius: 8px;
@@ -446,8 +447,8 @@ select:focus {
 }
 
 .content-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1400px;
+  margin: 2rem auto;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -500,4 +501,96 @@ select:focus {
 
 .patient-list::-webkit-scrollbar-thumb:hover {
   background: #a24343;
+}
+
+.photo-field {
+  grid-column: span 2;
+}
+
+.photo-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.photo-preview {
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.patient-photo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.patient-photo img {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.patient-details .field {
+  margin-bottom: 0.75rem;
+}
+
+.patient-details .input,
+.patient-details .textarea {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.patient-details .field-grid {
+  gap: 0.75rem;
+}
+
+.patient-details .section {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.patient-details .section-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.patient-details .label {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.patient-details .textarea {
+  min-height: 60px;
+  max-height: 120px;
+}
+
+.patient-details .photo-field {
+  grid-column: span 1;
+}
+
+.field-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.patient-details .field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.patient-details .photo-field {
+  grid-column: span 1;
+  margin-top: 0.5rem;
+}
+
+.patient-details .photo-preview {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

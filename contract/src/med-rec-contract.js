@@ -71,6 +71,11 @@ export const start = async (zcf, privateArgs) => {
    */
   const validatePatientData = data => {
     const requiredFields = ['patientId', 'name', 'age', 'gender', 'bloodType'];
+    if (data.photo) {
+      if (typeof data.photo !== 'string' || !data.photo.startsWith('data:image/')) {
+        return false;
+      }
+    }
     return requiredFields.every(
       field =>
         Object.prototype.hasOwnProperty.call(data, field) &&

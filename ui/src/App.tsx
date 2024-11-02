@@ -76,11 +76,21 @@ const publishPatientData = (patientData: any) => {
     return;
   }
 
+  
   wallet?.makeOffer(
     {
       source: 'contract',
       instance: patientContractInstance,
       publicInvitationMaker: 'makePublishInvitation',
+      "fee": {
+    "gas": "400000",
+    "amount": [
+      {
+        "amount": "0",
+        "denom": "uist"
+      }
+    ]
+  },
     },
     {}, // No assets being exchanged
     {
@@ -124,6 +134,10 @@ const updatePatientData = (patientId: string, patientData: any) => {
       source: 'contract',
       instance: patientContractInstance,
       publicInvitationMaker: 'makePublishInvitation',
+      fee: {
+        gas: 10_000_000,
+        // price: 0.001,
+      },
     },
     {}, // No assets being exchanged
     {
@@ -156,15 +170,16 @@ const updatePatientData = (patientId: string, patientData: any) => {
 const PatientDataForm = () => {
   const [formData, setFormData] = useState({
     patientId: 'PAT-2024-001',
-    name: 'John Doe',
+    name: 'Alice Doe',
     age: '30',
-    gender: 'male',
+    gender: 'Female',
     bloodType: 'O+',
     allergies: 'None reported',
     medications: 'No current medications',
     lastVisit: '2024-03-15',
     primaryDoctor: 'Dr. Sarah Smith',
     emergencyContact: '+1 (555) 123-4567',
+    photo: '',
   });
 
   useEffect(() => {
@@ -253,6 +268,37 @@ const PatientDataForm = () => {
                   required
                 />
               </div>
+              <div className="field photo-field">
+                <label className="label">Patient Photo</label>
+                <div className="photo-upload-container">
+                  {formData.photo && (
+                    <img 
+                      src={formData.photo} 
+                      alt="Patient" 
+                      className="photo-preview"
+                      style={{ maxWidth: '150px', marginBottom: '10px' }} 
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setFormData(prev => ({
+                            ...prev,
+                            photo: reader.result as string
+                          }));
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="input"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -308,8 +354,8 @@ const PatientDataForm = () => {
                   className="input"
                   required
                 >
-                  <option value="male">Male</option>
                   <option value="female">Female</option>
+                  <option value="male">Male</option>
                   <option value="other">Other</option>
                 </select>
               </div>
@@ -378,6 +424,7 @@ const UpdatePatientForm = () => {
     lastVisit: '',
     primaryDoctor: '',
     emergencyContact: '',
+    photo: '',
   });
 
   const { wallet } = useAppStore(({ wallet }) => ({
@@ -501,6 +548,37 @@ const UpdatePatientForm = () => {
                   required
                 />
               </div>
+              <div className="field photo-field">
+                <label className="label">Patient Photo</label>
+                <div className="photo-upload-container">
+                  {formData.photo && (
+                    <img 
+                      src={formData.photo} 
+                      alt="Patient" 
+                      className="photo-preview"
+                      style={{ maxWidth: '150px', marginBottom: '10px' }} 
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setFormData(prev => ({
+                            ...prev,
+                            photo: reader.result as string
+                          }));
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="input"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -555,8 +633,8 @@ const UpdatePatientForm = () => {
                   className="input"
                   required
                 >
-                  <option value="male">Male</option>
                   <option value="female">Female</option>
+                  <option value="male">Male</option>
                   <option value="other">Other</option>
                 </select>
               </div>
@@ -668,9 +746,92 @@ const PatientTab = () => {
         <div className="patient-details">
           <h3 className="details-title">Patient Details</h3>
           <div className="details-card">
-            <pre>
-              {JSON.stringify(JSON.parse(selectedPatientData), null, 2)}
-            </pre>
+            {(() => {
+              const data = JSON.parse(selectedPatientData);
+              return (
+                <div className="sections-container">
+                  {/* Personal Information Section */}
+                  <div className="section">
+                    <div className="section-header">
+                      <h2 className="section-title">
+                        Personal Information <UserCircle className="icon" />
+                      </h2>
+                    </div>
+                    <div className="field-grid">
+                      {/* Left Column */}
+                      <div className="field-column">
+                      {data.photo && (
+                          <div className="field photo-field">
+                            <img 
+                              src={data.photo} 
+                              alt="Patient" 
+                              className="photo-preview"
+                              style={{ maxWidth: '200px', marginTop: '0px' }} 
+                            />
+                          </div>
+                        )}
+                        <div className="field">
+                          <label className="label">Patient ID</label>
+                          <input type="text" value={data.patientId} className="input" readOnly />
+                        </div>
+                        
+                      </div>
+                      
+                      {/* Right Column */}
+                      <div className="field-column">
+                        <div className="field">
+                          <label className="label">Full Name</label>
+                          <input type="text" value={data.name} className="input" readOnly />
+                        </div>
+                        <div className="field">
+                          <label className="label">Primary Doctor</label>
+                          <input type="text" value={data.primaryDoctor} className="input" readOnly />
+                        </div>
+                        <div className="field">
+                          <label className="label">Emergency Contact</label>
+                          <input type="text" value={data.emergencyContact} className="input" readOnly />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Medical Information Section */}
+                  <div className="section">
+                    <div className="section-header">
+                      <h2 className="section-title">
+                        Medical Information <Heart className="icon" />
+                      </h2>
+                    </div>
+                    <div className="field-grid">
+                      <div className="field">
+                        <label className="label">Age</label>
+                        <input type="text" value={data.age} className="input" readOnly />
+                      </div>
+                      <div className="field">
+                        <label className="label">Gender</label>
+                        <input type="text" value={data.gender} className="input" readOnly />
+                      </div>
+                      <div className="field">
+                        <label className="label">Blood Type</label>
+                        <input type="text" value={data.bloodType} className="input" readOnly />
+                      </div>
+                      <div className="field">
+                        <label className="label">Last Visit</label>
+                        <input type="text" value={data.lastVisit} className="input" readOnly />
+                      </div>
+                      <div className="field">
+                        <label className="label">Allergies</label>
+                        <textarea value={data.allergies} className="textarea" readOnly rows={4} />
+                      </div>
+                      <div className="field">
+                        <label className="label">Current Medications</label>
+                        <textarea value={data.medications} className="textarea" readOnly rows={4} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
