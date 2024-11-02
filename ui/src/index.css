@@ -16,11 +16,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #ff6464;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #f25353;
 }
 
 body {
@@ -71,7 +71,7 @@ button:focus-visible {
 }
 
 .highlighted {
-  background-color: #f0f8ff;
+  background-color: #fff0f0;
   font-weight: bold;
 }
 
@@ -79,11 +79,11 @@ button:focus-visible {
 .app-container {
   min-height: 100vh;
   background-color: #f0f2f5;
-  padding: 2rem 1rem;
+  padding: 1rem 0.5rem;
 }
 
 .form-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   background-color: #ffffff;
   border-radius: 12px;
@@ -93,18 +93,20 @@ button:focus-visible {
 
 /* Header Styles */
 .header {
-  background: linear-gradient(to right, #4e54c8, #8f94fb);
-  padding: 1.5rem;
+  background: linear-gradient(to right, #c84e4e, #fb8f8f);
+  padding: 1rem;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0 auto;
+  padding: 0 rem 0;
 }
 
 .highlighted {
-  background-color: #f0f8ff;
+  background-color: #fff0f0;
   font-weight: bold;
 }
 
@@ -114,7 +116,7 @@ button:focus-visible {
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
   margin-left: 0.75rem;
@@ -152,7 +154,7 @@ button:focus-visible {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  color: #4e54c8;
+  color: #c84e4e;
   padding: 0.5rem 1rem;
   border-radius: 25px;
   font-weight: 500;
@@ -169,16 +171,16 @@ button:focus-visible {
   margin-right: 0.5rem;
   width: 24px;
   height: 24px;
-  color: #4e54c8;
+  color: #c84e4e;
 }
 
 /* Form Styles */
 .form {
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .section-header {
@@ -188,7 +190,7 @@ button:focus-visible {
 }
 
 .section-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #333333;
   margin-left: 0.5rem;
@@ -197,7 +199,8 @@ button:focus-visible {
 .field-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 1rem;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -221,7 +224,7 @@ button:focus-visible {
 .input,
 .textarea,
 select {
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #cccccc;
   border-radius: 8px;
   font-size: 1rem;
@@ -232,18 +235,20 @@ select {
 .input:focus,
 .textarea:focus,
 select:focus {
-  border-color: #4e54c8;
+  border-color: #c84e4e;
   outline: none;
 }
 
 .textarea {
   resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Submit Button */
 .submit-button {
   width: 100%;
-  background-color: #4e54c8;
+  background-color: #c84e4e;
   color: #ffffff;
   padding: 0.75rem 1rem;
   border-radius: 25px;
@@ -259,7 +264,7 @@ select:focus {
 }
 
 .submit-button:hover {
-  background-color: #4348a2;
+  background-color: #a24343;
 }
 
 .submit-button .icon {
@@ -289,8 +294,8 @@ select:focus {
 
 .view-container {
   display: flex;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1rem;
   background-color: #f9f9f9;
   border-radius: 8px;
 }
@@ -331,17 +336,17 @@ select:focus {
 }
 
 .patient-item:hover {
-  background-color: #e6f7ff;
+  background-color: #ffe6e6;
 }
 
 .patient-item.highlighted {
-  background-color: #bae7ff;
+  background-color: #ffbaba;
   font-weight: bold;
 }
 
 .patient-icon {
   margin-right: 0.75rem;
-  color: #1890ff;
+  color: #ff1818;
 }
 
 .patient-details {
@@ -368,7 +373,7 @@ select:focus {
 .nav-buttons {
   display: flex;
   justify-content: center;
-  gap: 5rem;
+  gap: 3rem;
   background-color: #ffffff;
   padding: 1rem;
   border-radius: 8px;
@@ -379,7 +384,7 @@ select:focus {
 .nav-tab {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
@@ -392,20 +397,34 @@ select:focus {
 
 .nav-tab .icon {
   margin-right: 0.05rem;
-  color: #1890ff;
+  color: #c84e4e;
 }
 
 .nav-tab:hover {
-  background-color: #e6f7ff;
-  color: #1890ff;
+  background-color: #fff0f0;
+  color: #c84e4e;
 }
 
 .nav-tab.active {
-  background-color: #1890ff;
+  background-color: #c84e4e;
   color: #ffffff;
   font-weight: bold;
 }
 
 .nav-tab.active .icon {
   color: #ffffff;
+}
+
+/* Form section layout */
+.sections-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .sections-container {
+    grid-template-columns: 1fr;
+  }
 }

@@ -152,139 +152,137 @@ const PatientDataForm = () => {
     <div className="form-container">
       {/* Form */}
       <form onSubmit={handleSubmit} className="form">
-        {/* Personal Information */}
-        <div className="section">
-          <div className="section-header">
-            <h2 className="section-title">
-              Personal Information <UserCircle className="icon" />{' '}
-            </h2>
+        <div className="sections-container">
+          {/* Personal Information */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">
+                Personal Information <UserCircle className="icon" />{' '}
+              </h2>
+            </div>
+            <div className="field-grid">
+              {/* Patient ID */}
+              <div className="field">
+                <label className="label">Patient ID </label>
+                <input
+                  type="text"
+                  name="patientId"
+                  value={formData.patientId}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Full Name */}
+              <div className="field">
+                <label className="label">Full Name </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Primary Doctor */}
+              <div className="field">
+                <label className="label">Primary Doctor </label>
+                <input
+                  type="text"
+                  name="primaryDoctor"
+                  value={formData.primaryDoctor}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <div className="field-grid">
-            {/* Patient ID */}
-            <div className="field">
-              <label className="label">Patient ID </label>
-              <input
-                type="text"
-                name="patientId"
-                value={formData.patientId}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
-            </div>
-            {/* Full Name */}
-            <div className="field">
-              <label className="label">Full Name </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
-            </div>
-            {/* Primary Doctor */}
-            <div className="field">
-              <label className="label">Primary Doctor </label>
-              <input
-                type="text"
-                name="primaryDoctor"
-                value={formData.primaryDoctor}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
-            </div>
-          </div>
-        </div>
 
-        {/* Medical Information */}
-        <div className="section">
-          <div className="section-header">
-            <h2 className="section-title">
-              {' '}
-              Medical Information <Heart className="icon" />{' '}
-            </h2>
-          </div>
-          <div className="field-grid">
-            {/* Age */}
-            <div className="field">
-              <label className="label">Age </label>
-              <input
-                type="number"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
+          {/* Medical Information */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">
+                {' '}
+                Medical Information <Heart className="icon" />{' '}
+              </h2>
             </div>
-            {/* Blood Type */}
-            <div className="field">
-              <label className="label">Blood Type </label>
-              <input
-                type="text"
-                name="bloodType"
-                value={formData.bloodType}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
+            <div className="field-grid">
+              {/* Age */}
+              <div className="field">
+                <label className="label">Age </label>
+                <input
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Blood Type */}
+              <div className="field">
+                <label className="label">Blood Type </label>
+                <input
+                  type="text"
+                  name="bloodType"
+                  value={formData.bloodType}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Gender */}
+              <div className="field">
+                <label className="label">Gender </label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              {/* Last Visit Date */}
+              <div className="field">
+                <label className="label">Last Visit Date </label>
+                <input
+                  type="date"
+                  name="lastVisit"
+                  value={formData.lastVisit}
+                  onChange={handleInputChange}
+                  className="input"
+                  required
+                />
+              </div>
+              {/* Allergies */}
+              <div className="field">
+                <label className="label">Allergies </label>
+                <textarea
+                  name="allergies"
+                  value={formData.allergies}
+                  onChange={handleInputChange}
+                  className="textarea"
+                  rows={4}
+                />
+              </div>
+              {/* Current Medications */}
+              <div className="field">
+                <label className="label">Current Medications </label>
+                <textarea
+                  name="medications"
+                  value={formData.medications}
+                  onChange={handleInputChange}
+                  className="textarea"
+                  rows={4}
+                />
+              </div>
             </div>
-            {/* Gender */}
-            <div className="field">
-              <label className="label">Gender </label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                className="input"
-                required
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            {/* Last Visit Date */}
-            <div className="field">
-              <label className="label">Last Visit Date </label>
-              <input
-                type="date"
-                name="lastVisit"
-                value={formData.lastVisit}
-                onChange={handleInputChange}
-                className="input"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Information */}
-        <div className="field-grid">
-          {/* Allergies */}
-          <div className="field">
-            <label className="label">Allergies </label>
-            <textarea
-              name="allergies"
-              value={formData.allergies}
-              onChange={handleInputChange}
-              className="textarea"
-              rows={4}
-            />
-          </div>
-          {/* Current Medications */}
-          <div className="field">
-            <label className="label">Current Medications </label>
-            <textarea
-              name="medications"
-              value={formData.medications}
-              onChange={handleInputChange}
-              className="textarea"
-              rows={4}
-            />
           </div>
         </div>
 
