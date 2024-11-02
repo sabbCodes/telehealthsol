@@ -12,9 +12,9 @@ dist
 dist-ssr
 *.local
 .env
-.yarnrc.yml
 install-state.gz
 ,tx.json
+start-med-rec-plan.json
 
 # Editor directories and files
 .vscode/*

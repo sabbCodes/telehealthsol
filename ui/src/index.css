@@ -126,6 +126,28 @@ button:focus-visible {
   height: 32px;
 }
 
+/* Wallet section styles */
+.wallet-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wallet-info {
+  min-width: 150px;
+}
+
+.wallet-address {
+  font-family: monospace;
+  background-color: #f0f0f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.wallet-address-placeholder {
+  height: 2rem;
+}
 .wallet-button {
   display: flex;
   align-items: center;
@@ -345,7 +367,8 @@ select:focus {
 
 .nav-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 5rem;
   background-color: #ffffff;
   padding: 1rem;
   border-radius: 8px;
@@ -361,12 +384,14 @@ select:focus {
   font-size: 1rem;
   font-weight: 500;
   color: #333;
-  border-radius: 6px;
-  transition: background-color 0.3s, color 0.3s;
+  border-radius: 10px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .nav-tab .icon {
-  margin-right: 0.5rem;
+  margin-right: 0.05rem;
   color: #1890ff;
 }
 
