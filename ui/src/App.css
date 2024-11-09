@@ -110,6 +110,7 @@
 .field {
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
 }
 
 .label {

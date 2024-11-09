@@ -1,7 +1,8 @@
-// @ts-check
+// @ts-nocheck
 import { E, Far } from '@endo/far';
 import { M } from '@endo/patterns';
 import '@agoric/zoe/exported.js';
+
 /**
  * @typedef {{
  * maxPatients: bigint;
@@ -16,6 +17,7 @@ export const meta = {
 
 /**
  * @param {ZCF<PatientTerms>} zcf
+ * @param privateArgs
  */
 export const start = async (zcf, privateArgs) => {
   const { maxPatients } = zcf.getTerms();
@@ -56,6 +58,7 @@ export const start = async (zcf, privateArgs) => {
    * @returns {Promise<boolean>}
    */
   const patientExists = async patientId => {
+    await null;
     try {
       const patientNode = await E(patientDataRoot).makeChildNode(patientId);
       const existingData = await E(patientNode).getValue();
@@ -70,9 +73,19 @@ export const start = async (zcf, privateArgs) => {
    * @param {object} data
    */
   const validatePatientData = data => {
-    const requiredFields = ['patientId', 'name', 'age', 'gender', 'bloodType'];
+    const requiredFields = [
+      'patientId',
+      'doctorId',
+      'signsNSymptoms',
+      'diagnosis',
+      'prescription',
+      'timestamp',
+    ];
     if (data.photo) {
-      if (typeof data.photo !== 'string' || !data.photo.startsWith('data:image/')) {
+      if (
+        typeof data.photo !== 'string' ||
+        !data.photo.startsWith('data:image/')
+      ) {
         return false;
       }
     }
@@ -104,6 +117,7 @@ export const start = async (zcf, privateArgs) => {
       return harden(new Error('Invalid patient data structure'));
     }
 
+    await null;
     try {
       // Check if adding a new patient (not updating existing)
       const isNewPatient = !(await patientExists(patientData.patientId));

@@ -7,7 +7,7 @@ _Note that this is a toy example dapp with no consideration made for privacy of 
 This is the user interface of dapp:
 
 <p align="center">
-    <img src="./ui/public/ui-dapp.png" alt="Med Rec Dapp" width="700">
+    <img src="./ui/public/ui-tele.png" alt="Med Rec Dapp" width="700">
 </p>
 
 This is how the data looks like in VStorage:
